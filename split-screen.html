@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile card · UI showcase · @stackanddstyle</title>
+  <style>
+    /* ============================================================
+       SPLIT-SCREEN SHOWCASE  ·  by @stackanddstyle
+       Left: live demo (index.html)   Right: the real code
+       ============================================================ */
+
+    /* ===== CHANGE COLORS HERE ===== */
+    :root {
+      --page:        #070a16;
+      --panel:       #0d1124;
+      --line:        rgba(255, 255, 255, 0.08);
+      --text:        #e6e9f5;
+      --muted:       #8f9bbd;
+      --violet:      #8b5cf6;
+      --cyan:        #22d3ee;
+      --tab-html:    #e44d26;
+      --tab-css:     #3b82f6;
+      --tab-js:      #f7df1e;
+
+      /* syntax colors */
+      --syn-text:    #c9d1e9;
+      --syn-comment: #6b7aa6;
+      --syn-string:  #7ee787;
+      --syn-keyword: #c792ea;
+      --syn-tag:     #ff6b8b;
+      --syn-attr:    #ffcb6b;
+      --syn-number:  #f78c6c;
+      --syn-func:    #61afef;
+      --syn-prop:    #a8c7fa;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: "Poppins", system-ui, sans-serif;
+      color: var(--text);
+      background: var(--page);
+    }
+
+    /* ---------- header ---------- */
+    .header {
+      flex: none;
+      height: 76px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand__dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      box-shadow:
+        0 0 14px rgba(139, 92, 246, 0.7),
+        0 0 26px rgba(34, 211, 238, 0.4);
+    }
+
+    .brand__name {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .brand__tech {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 6px;
+    }
+
+    .brand__tech svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .pill {
+      padding: 8px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill strong {
+      font-weight: 600;
+      color: var(--cyan);
+    }
+
+    /* ---------- the two panels ---------- */
+    .panels {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;   /* demo on top, code below */
+      gap: 18px;
+      padding: 0 28px 28px;
+    }
+
+    .panel:first-child {
+
+      flex: 0.9 1 0;
+
+    }
+    .panel:last-child {
+
+      flex: 1.1 1 0;
+
+    }
+    .panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+    }
+
+    .titlebar {
+      flex: none;
+      height: 46px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dots i {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dots i:nth-child(1) {
+
+      background: #ff5f57;
+
+    }
+    .dots i:nth-child(2) {
+      background: #febc2e;
+    }
+    .dots i:nth-child(3) {
+      background: #28c840;
+    }
+    .titlebar__label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* ---------- live preview ---------- */
+    .preview {
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      border: 0;
+      background: #f3f7ff;
+    }
+
+    /* ---------- tabs ---------- */
+    .tabs {
+      align-self: stretch;
+      display: flex;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      font: 500 13px "Poppins", system-ui, sans-serif;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .tab svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .tab:hover {
+
+      color: var(--text);
+
+    }
+    .tab[aria-selected="true"] {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .tab[data-tab="html"][aria-selected="true"] {
+
+      border-bottom-color: var(--tab-html);
+
+    }
+    .tab[data-tab="css"][aria-selected="true"] {
+      border-bottom-color: var(--tab-css);
+    }
+    .tab[data-tab="js"][aria-selected="true"] {
+      border-bottom-color: var(--tab-js);
+    }
+    .tab:focus-visible,
+    .copy:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: -2px;
+    }
+
+    .filelabel {
+      margin-left: auto;
+      font: 12px "JetBrains Mono", "Fira Code", Consolas, "DejaVu Sans Mono", monospace;
+      color: var(--muted);
+    }
+
+    .copy {
+      min-width: 74px;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      font: 500 12px "Poppins", system-ui, sans-serif;
+      color: #cdd5ee;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .copy:hover {
+
+      background: rgba(255, 255, 255, 0.1);
+
+    }
+    .copy.is-done {
+      color: var(--page);
+      border-color: var(--syn-string);
+      background: var(--syn-string);
+    }
+
+    /* ---------- code area ---------- */
+    .code {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 20px 26px 28px;
+      scrollbar-width: thin;
+      scrollbar-color: #2a3358 transparent;
+    }
+
+    .code::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .code::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      background: #2a3358;
+    }
+
+    .code pre {
+      margin: 0;
+      font: 14px/1.7 "JetBrains Mono", "Fira Code", Consolas, "DejaVu Sans Mono", monospace;
+      color: var(--syn-text);
+      tab-size: 2;
+    }
+
+    .tok-comment {
+
+      color: var(--syn-comment);
+
+      font-style: italic;
+
+    }
+    .tok-string {
+      color: var(--syn-string);
+    }
+    .tok-keyword {
+      color: var(--syn-keyword);
+    }
+    .tok-tag {
+      color: var(--syn-tag);
+    }
+    .tok-attr {
+      color: var(--syn-attr);
+    }
+    .tok-number {
+      color: var(--syn-number);
+    }
+    .tok-func {
+      color: var(--syn-func);
+    }
+    .tok-prop {
+      color: var(--syn-prop);
+    }
+    /* ---------- big portrait screens (reel / phone video): larger text ---------- */
+    @media (min-width: 900px) and (max-aspect-ratio: 1/1) {
+      .header {
+        height: 96px;
+      }
+      .brand__name {
+
+        font-size: 28px;
+
+      }
+      .brand__tech svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .pill {
+
+        font-size: 17px;
+
+      }
+      .titlebar {
+
+        height: 58px;
+
+      }
+      .titlebar__label {
+
+        font-size: 16px;
+
+      }
+      .tab {
+
+        font-size: 16px;
+
+      }
+      .tab svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      .filelabel {
+
+        font-size: 15px;
+
+      }
+      .copy {
+
+        font-size: 15px;
+
+      }
+      .code pre {
+
+        font-size: 18px;
+
+      }
+    }
+
+    /* ---------- small phones: tighter spacing ---------- */
+    @media (max-width: 600px) {
+      .header {
+        height: auto;
+        padding: 14px 16px;
+        flex-wrap: wrap;
+      }
+
+      .panels {
+
+        padding: 0 12px 12px;
+
+      }
+      .titlebar {
+        gap: 10px;
+        padding: 0 10px;
+      }
+
+      .filelabel {
+
+        display: none;
+
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Icons, defined once and reused with <use> -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <symbol id="ico-html" viewBox="0 0 24 24">
+      <path d="M3.5 2h17l-1.6 18-6.9 2-6.9-2z" fill="#e44d26"/>
+      <path d="M12 20.9V3.7h7.1l-1.4 15.3z" fill="#f16529"/>
+      <text x="12" y="16" text-anchor="middle" font-family="Poppins, sans-serif"
+            font-size="11" font-weight="700" fill="#ffffff">5</text>
+    </symbol>
+    <symbol id="ico-css" viewBox="0 0 24 24">
+      <path d="M3.5 2h17l-1.6 18-6.9 2-6.9-2z" fill="#1572b6"/>
+      <path d="M12 20.9V3.7h7.1l-1.4 15.3z" fill="#33a9dc"/>
+      <text x="12" y="16" text-anchor="middle" font-family="Poppins, sans-serif"
+            font-size="11" font-weight="700" fill="#ffffff">3</text>
+    </symbol>
+    <symbol id="ico-js" viewBox="0 0 24 24">
+      <rect x="2" y="2" width="20" height="20" rx="2" fill="#f7df1e"/>
+      <text x="20.5" y="20" text-anchor="end" font-family="Poppins, sans-serif"
+            font-size="10" font-weight="700" fill="#1a1a1a">JS</text>
+    </symbol>
+  </svg>
+
+  <header class="header">
+    <div class="brand">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <h1 class="brand__name">Profile card</h1>
+      <div class="brand__tech" aria-label="Built with HTML, CSS and JavaScript">
+        <svg aria-hidden="true"><use href="#ico-html"/></svg>
+        <svg aria-hidden="true"><use href="#ico-css"/></svg>
+        <svg aria-hidden="true"><use href="#ico-js"/></svg>
+      </div>
+    </div>
+    <div class="pill">Created by <strong>@stackanddstyle</strong></div>
+  </header>
+
+  <main class="panels">
+
+    <!-- LEFT: the real working demo -->
+    <section class="panel" aria-label="Live preview">
+      <div class="titlebar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="titlebar__label">Live Preview</span>
+      </div>
+      <iframe class="preview" id="preview" src="index.html"
+              title="Live preview of the profile card"></iframe>
+    </section>
+
+    <!-- RIGHT: the full code -->
+    <section class="panel" aria-label="Source code">
+      <div class="titlebar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+
+        <div class="tabs" role="tablist" aria-label="Code files">
+          <button class="tab" role="tab" id="tab-html" data-tab="html"
+                  aria-selected="true" aria-controls="codepanel">
+            <svg aria-hidden="true"><use href="#ico-html"/></svg>HTML
+          </button>
+          <button class="tab" role="tab" id="tab-css" data-tab="css"
+                  aria-selected="false" aria-controls="codepanel" tabindex="-1">
+            <svg aria-hidden="true"><use href="#ico-css"/></svg>CSS
+          </button>
+          <button class="tab" role="tab" id="tab-js" data-tab="js"
+                  aria-selected="false" aria-controls="codepanel" tabindex="-1">
+            <svg aria-hidden="true"><use href="#ico-js"/></svg>JS
+          </button>
+        </div>
+
+        <span class="filelabel" id="filelabel">index.html</span>
+        <button class="copy" id="copy" type="button">Copy</button>
+      </div>
+
+      <div class="code" id="codepanel" role="tabpanel" tabindex="0"
+           aria-labelledby="tab-html">
+        <pre><code id="code"></code></pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- The real source files, embedded so the page works from any folder -->
+  <script type="application/json" id="code-data">{"html": "\u003c!DOCTYPE html\u003e\n\u003chtml lang=\"en\" class=\"is-loading\"\u003e\n\u003chead\u003e\n  \u003cmeta charset=\"UTF-8\"\u003e\n  \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003e\n  \u003ctitle\u003eProfile card \u00b7 @stackanddstyle\u003c/title\u003e\n  \u003clink rel=\"stylesheet\" href=\"style.css\"\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n\n  \u003cmain class=\"stage\"\u003e\n    \u003ch1 class=\"stage__label\"\u003eProfile card\u003c/h1\u003e\n\n    \u003c!-- The whole component. data-open is switched by script.js --\u003e\n    \u003cdiv class=\"profile\" id=\"profile\" data-open=\"false\"\u003e\n\n      \u003c!-- Round backdrop that grows behind the icons --\u003e\n      \u003cspan class=\"profile__disc\" aria-hidden=\"true\"\u003e\u003c/span\u003e\n\n      \u003c!-- The card itself --\u003e\n      \u003carticle class=\"profile__card\"\u003e\n        \u003cdiv class=\"profile__avatar\" aria-hidden=\"true\"\u003e\n          \u003csvg viewBox=\"0 0 64 64\"\u003e\n            \u003ccircle cx=\"32\" cy=\"24\" r=\"11\"/\u003e\n            \u003cpath d=\"M10 64c2-14 12-20 22-20s20 6 22 20z\"/\u003e\n          \u003c/svg\u003e\n        \u003c/div\u003e\n\n        \u003cdiv class=\"profile__info\"\u003e\n          \u003ch2 class=\"profile__name\"\u003estackanddstyle\u003c/h2\u003e\n          \u003cp class=\"profile__role\"\u003eWeb Developer\u003c/p\u003e\n        \u003c/div\u003e\n\n        \u003c!-- Menu button: three bars that turn into a cross --\u003e\n        \u003cbutton class=\"profile__toggle\" id=\"toggle\" type=\"button\"\n                aria-expanded=\"false\" aria-controls=\"socials\"\n                aria-label=\"Open social links\"\u003e\n          \u003cspan class=\"bars\" aria-hidden=\"true\"\u003e\n            \u003cspan\u003e\u003c/span\u003e\u003cspan\u003e\u003c/span\u003e\u003cspan\u003e\u003c/span\u003e\n          \u003c/span\u003e\n        \u003c/button\u003e\n      \u003c/article\u003e\n\n      \u003c!-- Social icons. --i = order, --angle = place on the arc --\u003e\n      \u003cul class=\"profile__socials\" id=\"socials\" aria-label=\"Social links\"\u003e\n        \u003cli style=\"--i: 0; --angle: -72deg\"\u003e\n          \u003ca class=\"profile__social\" href=\"#\" aria-label=\"CodePen\"\u003e\n            \u003csvg viewBox=\"0 0 24 24\" aria-hidden=\"true\"\u003e\n              \u003cpath d=\"M12 2 22 8.5v7L12 22 2 15.5v-7z\"/\u003e\n              \u003cpath d=\"M12 22v-6.5\"/\u003e\n              \u003cpath d=\"M22 8.5 12 15.5 2 8.5\"/\u003e\n              \u003cpath d=\"M2 15.5 12 8.5l10 7\"/\u003e\n              \u003cpath d=\"M12 2v6.5\"/\u003e\n            \u003c/svg\u003e\n          \u003c/a\u003e\n        \u003c/li\u003e\n        \u003cli style=\"--i: 1; --angle: -36deg\"\u003e\n          \u003ca class=\"profile__social\" href=\"#\" aria-label=\"Facebook\"\u003e\n            \u003csvg viewBox=\"0 0 24 24\" aria-hidden=\"true\"\u003e\n              \u003cpath d=\"M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7\n                a1 1 0 0 1 1-1h3z\"/\u003e\n            \u003c/svg\u003e\n          \u003c/a\u003e\n        \u003c/li\u003e\n        \u003cli style=\"--i: 2; --angle: 0deg\"\u003e\n          \u003ca class=\"profile__social\" href=\"#\" aria-label=\"GitHub\"\u003e\n            \u003csvg viewBox=\"0 0 24 24\" aria-hidden=\"true\"\u003e\n              \u003cpath d=\"M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5\n                .28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2\n                c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5\n                -.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4\"/\u003e\n              \u003cpath d=\"M9 18c-4.51 2-5-2-7-2\"/\u003e\n            \u003c/svg\u003e\n          \u003c/a\u003e\n        \u003c/li\u003e\n        \u003cli style=\"--i: 3; --angle: 36deg\"\u003e\n          \u003ca class=\"profile__social\" href=\"#\" aria-label=\"Instagram\"\u003e\n            \u003csvg viewBox=\"0 0 24 24\" aria-hidden=\"true\"\u003e\n              \u003crect width=\"20\" height=\"20\" x=\"2\" y=\"2\" rx=\"5\" ry=\"5\"/\u003e\n              \u003cpath d=\"M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z\"/\u003e\n              \u003cpath d=\"M17.5 6.5h.01\"/\u003e\n            \u003c/svg\u003e\n          \u003c/a\u003e\n        \u003c/li\u003e\n        \u003cli style=\"--i: 4; --angle: 72deg\"\u003e\n          \u003ca class=\"profile__social\" href=\"#\" aria-label=\"Dribbble\"\u003e\n            \u003csvg viewBox=\"0 0 24 24\" aria-hidden=\"true\"\u003e\n              \u003ccircle cx=\"12\" cy=\"12\" r=\"10\"/\u003e\n              \u003cpath d=\"M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94\"/\u003e\n              \u003cpath d=\"M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32\"/\u003e\n              \u003cpath d=\"M8.56 2.75c4.37 6 6 9.42 8 17.72\"/\u003e\n            \u003c/svg\u003e\n          \u003c/a\u003e\n        \u003c/li\u003e\n      \u003c/ul\u003e\n    \u003c/div\u003e\n\n    \u003cp class=\"stage__hint\"\u003e\n      Click the menu \u00b7 press \u003ckbd\u003eP\u003c/kbd\u003e to toggle \u00b7 \u003ckbd\u003eEsc\u003c/kbd\u003e to close\n    \u003c/p\u003e\n  \u003c/main\u003e\n\n  \u003cspan class=\"credit\"\u003eCreated by @stackanddstyle\u003c/span\u003e\n\n  \u003cscript src=\"script.js\"\u003e\u003c/script\u003e\n\u003c/body\u003e\n\u003c/html\u003e\n", "css": "/* ============================================================\n   PROFILE CARD  \u00b7  by @stackanddstyle\n   Plain CSS, no libraries. Everything inside the card uses\n   \"em\" units, so changing .stage font-size scales it all.\n   ============================================================ */\n\n/* ============================================================\n   1. CHANGE COLORS HERE\n   Every color in this file comes from these variables.\n   ============================================================ */\n:root {\n  --page-bg:       #f3f7ff;  /* page background                */\n  --page-glow:     #cfe0ff;  /* soft glow behind the card      */\n  --card-bg:       #ffffff;  /* card surface                   */\n  --card-edge:     #ffffff;  /* thin highlight on the card     */\n  --ink:           #0f2a5c;  /* main text and dark buttons     */\n  --muted:         #6b7fa6;  /* role, label and hint text      */\n  --accent:        #2563eb;  /* open state and hover color     */\n  --on-dark:       #ffffff;  /* icons on dark buttons          */\n  --avatar-top:    #93c5fd;  /* avatar gradient, top           */\n  --avatar-bottom: #2563eb;  /* avatar gradient, bottom        */\n  --disc:          rgba(255, 255, 255, 0.8);  /* round backdrop */\n  --shadow:        rgba(37, 99, 235, 0.25);   /* soft shadows   */\n  --focus:         #f59e0b;  /* keyboard focus ring            */\n  --kbd-bg:        #ffffff;  /* key caps in the hint line      */\n  --kbd-edge:      #d3e0fa;\n\n  /* Motion: a springy curve for the \"pop\" effect */\n  --pop: cubic-bezier(0.34, 1.56, 0.64, 1);\n}\n\n/* ============================================================\n   2. PAGE AND LAYOUT\n   ============================================================ */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\nbody {\n  margin: 0;\n  min-height: 100vh;\n  min-height: 100dvh;\n  display: grid;\n  place-items: center;\n  overflow-x: hidden;\n  font-family: \"Poppins\", system-ui, sans-serif;\n  color: var(--ink);\n  background:\n    radial-gradient(60% 50% at 50% 45%, var(--page-glow), transparent 70%),\n    var(--page-bg);\n}\n\n/* .stage holds the label, the card and the hint */\n.stage {\n  /* the one size knob: 12px on phones, up to 22px on big screens.\n     It also shrinks on short screens (3.2vh) so the arc always fits. */\n  font-size: clamp(10px, min(2.2vw + 6px, 3.2vh), 22px);\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 1.5em;\n}\n\n.stage__label {\n  margin: 0 0 5.6em;\n  font-size: 1.1em;\n  font-weight: 600;\n  letter-spacing: 0.02em;\n}\n\n.stage__hint {\n  margin: 5.6em 0 0;\n  font-size: 0.85em;\n  text-align: center;\n  color: var(--muted);\n}\n\nkbd {\n  padding: 0.1em 0.5em;\n  border: 1px solid var(--kbd-edge);\n  border-radius: 0.4em;\n  background: var(--kbd-bg);\n  font: inherit;\n  font-weight: 500;\n  color: var(--ink);\n}\n\n/* ============================================================\n   3. THE CARD\n   ============================================================ */\n.profile {\n  position: relative;\n  width: min(22em, calc(100vw - 11em));\n  margin-right: 5.2em;        /* leaves room for the icon arc */\n}\n\n.profile__card {\n  position: relative;\n  z-index: 1;\n  display: flex;\n  align-items: center;\n  gap: 1em;\n  height: 6em;\n  padding: 0.9em 1.1em 0.9em 0.9em;\n  border: 1px solid var(--card-edge);\n  border-radius: 3em;\n  background: var(--card-bg);\n  box-shadow:\n    0 1.1em 2.2em -0.7em var(--shadow),\n    inset 0 0.12em 0 var(--card-edge);\n  transition: transform 0.35s ease, box-shadow 0.35s ease;\n}\n\n.profile__card:hover {\n  transform: translateY(-0.2em);\n  box-shadow:\n    0 1.5em 2.6em -0.7em var(--shadow),\n    inset 0 0.12em 0 var(--card-edge);\n}\n\n.profile__avatar {\n  flex: none;\n  width: 4.2em;\n  height: 4.2em;\n  overflow: hidden;\n  border-radius: 50%;\n  color: var(--ink);\n  background: linear-gradient(160deg, var(--avatar-top), var(--avatar-bottom));\n  box-shadow: 0 0.5em 1em -0.3em var(--shadow);\n}\n\n.profile__avatar svg {\n  display: block;\n  width: 100%;\n  height: 100%;\n  fill: currentColor;\n}\n\n.profile__info {\n  flex: 1;\n  min-width: 0;\n}\n\n.profile__name {\n  margin: 0;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  font-size: 1.1em;\n  font-weight: 600;\n  line-height: 1.2;\n}\n\n.profile__role {\n  margin: 0.15em 0 0;\n  font-size: 0.8em;\n  color: var(--muted);\n}\n\n/* Small phones: slightly smaller avatar so the name stays on one line */\n@media (max-width: 480px) {\n  .profile {\n    width: calc(100vw - 8.6em);\n  }\n\n  .profile__avatar {\n    width: 3.4em;\n    height: 3.4em;\n  }\n\n  .profile__name {\n    font-size: 0.9em;\n  }\n}\n\n/* ============================================================\n   4. THE MENU BUTTON (three bars become a cross)\n   ============================================================ */\n.profile__toggle {\n  position: relative;\n  flex: none;\n  width: 3em;\n  height: 3em;\n  padding: 0;\n  border: 0;\n  border-radius: 50%;\n  color: var(--on-dark);\n  background: var(--ink);\n  cursor: pointer;\n  transition: background-color 0.3s ease, transform 0.3s var(--pop);\n}\n\n.profile__toggle:hover {\n  transform: scale(1.08);\n}\n\n.profile__toggle:focus-visible,\n.profile__social:focus-visible {\n  outline: 3px solid var(--focus);\n  outline-offset: 3px;\n}\n\n.bars span {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 1.1em;\n  height: 0.14em;\n  margin: -0.07em 0 0 -0.55em;\n  border-radius: 1em;\n  background: currentColor;\n  transition: transform 0.35s var(--pop), opacity 0.2s ease;\n}\n\n.bars span:nth-child(1) {\n  transform: translateY(-0.36em);\n}\n\n.bars span:nth-child(3) {\n  transform: translateY(0.36em);\n}\n\n/* open state: bars -\u003e cross, button turns accent colored */\n.profile[data-open=\"true\"] .profile__toggle {\n  background: var(--accent);\n}\n\n.profile[data-open=\"true\"] .bars span:nth-child(1) {\n  transform: rotate(45deg);\n}\n\n.profile[data-open=\"true\"] .bars span:nth-child(2) {\n  transform: scaleX(0);\n  opacity: 0;\n}\n\n.profile[data-open=\"true\"] .bars span:nth-child(3) {\n  transform: rotate(-45deg);\n}\n\n/* ============================================================\n   5. THE SOCIAL ICONS (they sit on an arc)\n   ============================================================ */\n.profile__disc {\n  position: absolute;\n  z-index: 0;\n  top: 50%;\n  left: calc(100% - 2.6em);   /* centered on the menu button */\n  width: 15.5em;\n  height: 15.5em;\n  margin: -7.75em 0 0 -7.75em;\n  border-radius: 50%;\n  background: var(--disc);\n  box-shadow: 0 1em 3em -1em var(--shadow);\n  opacity: 0;\n  transform: scale(0);\n  transition: transform 0.55s var(--pop), opacity 0.3s ease;\n}\n\n.profile[data-open=\"true\"] .profile__disc {\n  opacity: 1;\n  transform: scale(1);\n}\n\n.profile__socials {\n  position: absolute;\n  z-index: 2;\n  top: 50%;\n  left: calc(100% - 2.6em);\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\n\n.profile__socials li {\n  --radius: 6em;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 2.8em;\n  height: 2.8em;\n  margin: -1.4em 0 0 -1.4em;\n  /* closed: every icon hides under the menu button */\n  opacity: 0;\n  visibility: hidden;\n  transform: rotate(var(--angle)) translateX(0)\n             rotate(calc(var(--angle) * -1)) scale(0.2);\n  transition:\n    transform  0.4s ease calc((4 - var(--i)) * 40ms),\n    opacity    0.25s ease calc((4 - var(--i)) * 40ms),\n    visibility 0s linear 0.6s;\n}\n\n/* open: turn to the angle, slide out, turn back so icons stay upright */\n.profile[data-open=\"true\"] .profile__socials li {\n  opacity: 1;\n  visibility: visible;\n  transform: rotate(var(--angle)) translateX(var(--radius))\n             rotate(calc(var(--angle) * -1)) scale(1);\n  transition:\n    transform  0.55s var(--pop) calc(var(--i) * 70ms + 120ms),\n    opacity    0.25s ease calc(var(--i) * 70ms + 120ms),\n    visibility 0s;\n}\n\n.profile__social {\n  display: grid;\n  place-items: center;\n  width: 100%;\n  height: 100%;\n  border-radius: 50%;\n  color: var(--on-dark);\n  background: var(--ink);\n  box-shadow: 0 0.6em 1.1em -0.4em var(--shadow);\n  transition: background-color 0.25s ease, transform 0.25s var(--pop);\n}\n\n.profile__social:hover {\n  background: var(--accent);\n  transform: scale(1.18);\n}\n\n.profile__social svg {\n  width: 1.2em;\n  height: 1.2em;\n  fill: none;\n  stroke: currentColor;\n  stroke-width: 2;\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n\n/* ============================================================\n   6. CREDIT PILL (bottom-right corner)\n   ============================================================ */\n.credit {\n  position: fixed;\n  right: 18px;\n  bottom: 18px;\n  padding: 0.55em 1.1em;\n  border-radius: 999px;\n  font-size: 13px;\n  font-weight: 500;\n  color: var(--on-dark);\n  background: var(--ink);\n  box-shadow: 0 0.6em 1.2em -0.4em var(--shadow);\n}\n\n/* ============================================================\n   7. ACCESSIBILITY: reduced motion + no animation on first load\n   ============================================================ */\n@media (prefers-reduced-motion: reduce) {\n  *,\n  *::before,\n  *::after {\n    transition-duration: 0.01ms !important;\n    transition-delay: 0s !important;\n  }\n}\n\n/* script.js removes .is-loading after the first paint, so a saved\n   \"open\" state does not animate when the page loads */\n.is-loading *,\n.is-loading *::before,\n.is-loading *::after {\n  transition: none !important;\n}\n", "js": "/* ============================================================\n   PROFILE CARD  \u00b7  by @stackanddstyle\n   Plain JavaScript, no libraries.\n   ============================================================ */\n\n// 1. Grab the elements we need\nconst profile = document.getElementById(\"profile\");\nconst toggle = document.getElementById(\"toggle\");\nconst socialLinks = Array.from(\n  document.querySelectorAll(\".profile__social\")\n);\n\n// The saved state lives in localStorage under this name\nconst STORAGE_KEY = \"profile-card-open\";\n\n// 2. Small helper: is the card open right now?\nfunction isOpen() {\n  return profile.dataset.open === \"true\";\n}\n\n// 3. Remember the state (storage can be blocked, so use try/catch)\nfunction saveState(value) {\n  try {\n    localStorage.setItem(STORAGE_KEY, value ? \"1\" : \"0\");\n  } catch (error) {\n    // Storage is not available, so we simply skip saving\n  }\n}\n\nfunction loadState() {\n  try {\n    return localStorage.getItem(STORAGE_KEY) === \"1\";\n  } catch (error) {\n    return false;\n  }\n}\n\n// 4. Open or close the card\n//    CSS does the animation, we only change data-open and ARIA text\nfunction setOpen(open, remember = true) {\n  profile.dataset.open = String(open);\n  toggle.setAttribute(\"aria-expanded\", String(open));\n  toggle.setAttribute(\n    \"aria-label\",\n    open ? \"Close social links\" : \"Open social links\"\n  );\n\n  if (remember) {\n    saveState(open);\n  }\n}\n\n// 5. Click on the menu button\ntoggle.addEventListener(\"click\", function () {\n  setOpen(!isOpen());\n});\n\n// 6. Keyboard shortcuts\ndocument.addEventListener(\"keydown\", function (event) {\n  // Leave browser shortcuts (Ctrl+P, Cmd+R ...) alone\n  if (event.ctrlKey || event.metaKey || event.altKey) {\n    return;\n  }\n\n  const key = event.key.toLowerCase();\n\n  // P toggles the card\n  if (key === \"p\") {\n    setOpen(!isOpen());\n    return;\n  }\n\n  // Esc closes the card and gives focus back to the menu button\n  if (key === \"escape\" \u0026\u0026 isOpen()) {\n    setOpen(false);\n    toggle.focus();\n    return;\n  }\n\n  // Arrow keys walk through the icons while the card is open\n  if (isOpen() \u0026\u0026 key.startsWith(\"arrow\")) {\n    event.preventDefault();\n\n    const current = socialLinks.indexOf(document.activeElement);\n    const forward = key === \"arrowright\" || key === \"arrowdown\";\n    let next = forward ? current + 1 : current - 1;\n\n    // Wrap around at both ends\n    if (next \u003e= socialLinks.length) {\n      next = 0;\n    }\n    if (next \u003c 0) {\n      next = socialLinks.length - 1;\n    }\n\n    socialLinks[next].focus();\n  }\n});\n\n// 7. These links are only a demo, so stop them jumping to the top\nsocialLinks.forEach(function (link) {\n  link.addEventListener(\"click\", function (event) {\n    event.preventDefault();\n  });\n});\n\n// 8. Start: restore the saved state without playing the animation\nsetOpen(loadState(), false);\n\n// Remove the \"no animation\" guard after the first paint\nrequestAnimationFrame(function () {\n  requestAnimationFrame(function () {\n    document.documentElement.classList.remove(\"is-loading\");\n  });\n});\n"}</script>
+
+  <script>
+    /* ============================================================
+       Code viewer: tabs, syntax highlighting and the Copy button
+       ============================================================ */
+    const SOURCES = JSON.parse(document.getElementById("code-data").textContent);
+
+    const FILES = {
+      html: "index.html",
+      css: "style.css",
+      js: "script.js"
+    };
+
+    const codeBox = document.getElementById("code");
+    const codePanel = document.getElementById("codepanel");
+    const fileLabel = document.getElementById("filelabel");
+    const copyButton = document.getElementById("copy");
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+
+    let activeTab = "html";
+
+    /* ---------- small helpers ---------- */
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function token(kind, text) {
+      return '<span class="tok-' + kind + '">' + escapeHtml(text) + "</span>";
+    }
+
+    /* A tiny lexer: tries each rule at the current position */
+    function lex(source, rules) {
+      let output = "";
+      let index = 0;
+
+      while (index < source.length) {
+        let matched = false;
+
+        for (const [kind, regex] of rules) {
+          regex.lastIndex = index;
+          const match = regex.exec(source);
+
+          if (match && match[0].length > 0) {
+            output += kind === "plain" ? escapeHtml(match[0]) : token(kind, match[0]);
+            index += match[0].length;
+            matched = true;
+            break;
+          }
+        }
+
+        if (!matched) {
+          output += escapeHtml(source[index]);
+          index += 1;
+        }
+      }
+
+      return output;
+    }
+
+    /* ---------- HTML ---------- */
+    function highlightTag(tag) {
+      const parts = tag.match(/^(<\/?)([A-Za-z][\w-]*)([\s\S]*?)(\/?>)$/);
+
+      if (!parts) {
+        return escapeHtml(tag);
+      }
+
+      let output = token("tag", parts[1] + parts[2]);
+      const attrRegex = /([^\s=\/"'>]+)(\s*=\s*)("[^"]*"|'[^']*'|[^\s"'>]+)|([^\s=\/"'>]+)/g;
+      const rest = parts[3];
+      let last = 0;
+      let match;
+
+      while ((match = attrRegex.exec(rest))) {
+        output += escapeHtml(rest.slice(last, match.index));
+
+        if (match[1]) {
+          output += token("attr", match[1]) + escapeHtml(match[2]) + token("string", match[3]);
+        } else {
+          output += token("attr", match[4]);
+        }
+
+        last = attrRegex.lastIndex;
+      }
+
+      output += escapeHtml(rest.slice(last));
+      output += token("tag", parts[4]);
+      return output;
+    }
+
+    function highlightHTML(source) {
+      const regex = /<!--[\s\S]*?-->|<!DOCTYPE[^>]*>|<\/?[A-Za-z][^>]*>/gi;
+      let output = "";
+      let last = 0;
+      let match;
+
+      while ((match = regex.exec(source))) {
+        output += escapeHtml(source.slice(last, match.index));
+
+        if (match[0].startsWith("<!--")) {
+          output += token("comment", match[0]);
+        } else if (/^<!doctype/i.test(match[0])) {
+          output += token("keyword", match[0]);
+        } else {
+          output += highlightTag(match[0]);
+        }
+
+        last = regex.lastIndex;
+      }
+
+      return output + escapeHtml(source.slice(last));
+    }
+
+    /* ---------- CSS ---------- */
+    const CSS_VALUE_RULES = [
+      ["comment", /\/\*[\s\S]*?\*\//y],
+      ["string", /"[^"]*"|'[^']*'/y],
+      ["keyword", /!important/y],
+      ["number", /#[0-9a-fA-F]{3,8}\b/y],
+      ["number", /(?<![\w-])-?\d*\.?\d+(?:px|em|rem|%|deg|ms|s|vh|vw|dvh)?(?![\w-])/y],
+      ["func", /[A-Za-z-]+(?=\()/y],
+      ["prop", /--[\w-]+/y],
+      ["plain", /[\w-]+/y]
+    ];
+
+    const CSS_SELECTOR_RULES = [
+      ["string", /"[^"]*"|'[^']*'/y],
+      ["attr", /\[[^\]="]+/y],
+      ["func", /::?[\w-]+/y],
+      ["tag", /[.#]?[\w-]+/y]
+    ];
+
+    function highlightPrelude(text) {
+      const trimmed = text.trim();
+
+      if (trimmed.startsWith("@")) {
+        const atRule = text.match(/^(\s*)(@[\w-]+)([\s\S]*)$/);
+        return atRule[1] + token("keyword", atRule[2]) + lex(atRule[3], CSS_VALUE_RULES);
+      }
+
+      return lex(text, CSS_SELECTOR_RULES);
+    }
+
+    function highlightCSS(source) {
+      let output = "";
+      let index = 0;
+      let prelude = "";
+      const stack = [];
+
+      while (index < source.length) {
+        // comments can appear anywhere
+        if (source.startsWith("/*", index)) {
+          const end = source.indexOf("*/", index + 2);
+          const stop = end < 0 ? source.length : end + 2;
+          output += token("comment", source.slice(index, stop));
+          index = stop;
+          continue;
+        }
+
+        const inside = stack[stack.length - 1];
+
+        if (inside === "rule") {
+          // inside { } : read declarations
+          const character = source[index];
+
+          if (character === "}") {
+            output += "}";
+            stack.pop();
+            prelude = "";
+            index += 1;
+            continue;
+          }
+
+          const property = /\s*([-\w]+)(\s*:)/y;
+          property.lastIndex = index;
+          const found = property.exec(source);
+
+          if (found) {
+            const lead = found[0].slice(0, found[0].indexOf(found[1]));
+            output += lead + token("prop", found[1]) + found[2];
+            index += found[0].length;
+
+            // the value runs until ; or }
+            let end = index;
+            while (end < source.length && source[end] !== ";" && source[end] !== "}") {
+              end += 1;
+            }
+            output += lex(source.slice(index, end), CSS_VALUE_RULES);
+            index = end;
+            continue;
+          }
+
+          output += escapeHtml(character);
+          index += 1;
+          continue;
+        }
+
+        // outside a rule: selectors and at-rules
+        let end = index;
+        while (
+          end < source.length &&
+          !"{};".includes(source[end]) &&
+          !source.startsWith("/*", end)
+        ) {
+          end += 1;
+        }
+
+        if (end > index) {
+          const chunk = source.slice(index, end);
+          prelude += chunk;
+          output += highlightPrelude(chunk);
+          index = end;
+          continue;
+        }
+
+        const character = source[index];
+
+        if (character === "{") {
+          const isContainer = /^\s*@(media|supports|keyframes|layer)/.test(prelude);
+          stack.push(isContainer ? "container" : "rule");
+          prelude = "";
+        } else if (character === "}") {
+          stack.pop();
+          prelude = "";
+        } else {
+          prelude = "";
+        }
+
+        output += escapeHtml(character);
+        index += 1;
+      }
+
+      return output;
+    }
+
+    /* ---------- JavaScript ---------- */
+    const JS_RULES = [
+      ["comment", /\/\*[\s\S]*?\*\/|\/\/[^\n]*/y],
+      ["string", /"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|`(?:\\.|[^`\\])*`/y],
+      ["number", /\b\d+(?:\.\d+)?\b/y],
+      ["keyword", /\b(?:const|let|var|function|return|if|else|for|while|new|true|false|null|undefined|this|typeof|of|in|class|try|catch|throw|await|async|break|continue)\b/y],
+      ["func", /[A-Za-z_$][\w$]*(?=\()/y],
+      ["plain", /[A-Za-z_$][\w$]*/y]
+    ];
+
+    function highlightJS(source) {
+      return lex(source, JS_RULES);
+    }
+
+    const HIGHLIGHTERS = {
+      html: highlightHTML,
+      css: highlightCSS,
+      js: highlightJS
+    };
+
+    /* ---------- show one file ---------- */
+    function showTab(name) {
+      activeTab = name;
+
+      tabs.forEach(function (tab) {
+        const selected = tab.dataset.tab === name;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+
+      codePanel.setAttribute("aria-labelledby", "tab-" + name);
+      fileLabel.textContent = FILES[name];
+      codeBox.innerHTML = HIGHLIGHTERS[name](SOURCES[name]);
+      codePanel.scrollTop = 0;
+      codePanel.scrollLeft = 0;
+    }
+
+    tabs.forEach(function (tab, position) {
+      tab.addEventListener("click", function () {
+        showTab(tab.dataset.tab);
+      });
+
+      // Arrow keys move between tabs
+      tab.addEventListener("keydown", function (event) {
+        let target = -1;
+
+        if (event.key === "ArrowRight") {
+          target = (position + 1) % tabs.length;
+        }
+        if (event.key === "ArrowLeft") {
+          target = (position - 1 + tabs.length) % tabs.length;
+        }
+
+        if (target >= 0) {
+          event.preventDefault();
+          tabs[target].focus();
+          showTab(tabs[target].dataset.tab);
+        }
+      });
+    });
+
+    /* ---------- Copy button ---------- */
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        // Fallback for pages opened straight from a folder (file://)
+        const box = document.createElement("textarea");
+        box.value = text;
+        box.style.position = "fixed";
+        box.style.opacity = "0";
+        document.body.appendChild(box);
+        box.select();
+        const worked = document.execCommand("copy");
+        box.remove();
+        return worked;
+      }
+    }
+
+    copyButton.addEventListener("click", async function () {
+      const worked = await copyText(SOURCES[activeTab]);
+
+      if (worked) {
+        copyButton.textContent = "Copied";
+        copyButton.classList.add("is-done");
+
+        setTimeout(function () {
+          copyButton.textContent = "Copy";
+          copyButton.classList.remove("is-done");
+        }, 1400);
+      }
+    });
+
+    showTab("html");
+  </script>
+</body>
+</html>
